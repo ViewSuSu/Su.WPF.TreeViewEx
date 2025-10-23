@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Su.WPF.CustomControl", "Su.WPF.CustomControl\Su.WPF.CustomControl.csproj", "{F060473B-700E-4D2E-B9D2-ABA9F614C5C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Su.WPF.CustomControl", "Su.WPF.CustomControl.csproj", "{57AE6AA5-6A11-FAFD-EA1E-8AEB70BFE2A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F060473B-700E-4D2E-B9D2-ABA9F614C5C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F060473B-700E-4D2E-B9D2-ABA9F614C5C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F060473B-700E-4D2E-B9D2-ABA9F614C5C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F060473B-700E-4D2E-B9D2-ABA9F614C5C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57AE6AA5-6A11-FAFD-EA1E-8AEB70BFE2A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57AE6AA5-6A11-FAFD-EA1E-8AEB70BFE2A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57AE6AA5-6A11-FAFD-EA1E-8AEB70BFE2A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57AE6AA5-6A11-FAFD-EA1E-8AEB70BFE2A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

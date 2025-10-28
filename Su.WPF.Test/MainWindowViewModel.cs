@@ -22,88 +22,93 @@ namespace Su.WPF.Test
             string packUri = $"pack://application:,,,/{assemblyName};component/仓鼠.png";
             Icon = new BitmapImage(new Uri(packUri, UriKind.Absolute));
 
-            var node = new TreeNodeEx("头节点")
-            {
-                TreeNodeExIconOptions = new TreeNodeExIconOptions(Icon),
-            };
+            var node = TreeNodeEx.CreateNode("头节点");
+            node.TreeNodeExIconOptions = new TreeNodeExIconOptions(Icon);
+            node.IsShowCheckBox = true;
+
             node.MenuItems.Add(
-                new CustomControl.Menu.MenuItemModel(
+                new CustomControl.Menu.TreeNodeMenu(
                     "123123",
-                    () =>
-                    {
-                        string aa = "123";
-                    }
+                    node.Delete // node.DeleteSelf())
                 )
             );
-            var childNode1 = new TreeNodeEx("123213") { IsShowCheckBox = true };
-            childNode1.Children.Add(new TreeNodeEx("123213") { IsShowCheckBox = true });
+
+            var menu = new CustomControl.Menu.TreeNodeMenu("删除自身1", node.Delete);
+
+            node.MenuItems.Add(menu);
+
+            var childNode1 = TreeNodeEx.CreateNode("2222");
+            childNode1.IsShowCheckBox = true;
+            childNode1.MenuItems.Add(menu);
+            var menu2 = new CustomControl.Menu.TreeNodeMenu(
+                "删除自身",
+                () =>
+                {
+                    childNode1.Delete();
+                }
+            );
+            childNode1.MenuItems.Add(menu2);
+
+            var c1 = TreeNodeEx.CreateNode("123213");
+            c1.IsShowCheckBox = true;
+            childNode1.Children.Add(c1);
+
+            // Add child1 to root
             node.Children.Add(childNode1);
-            node.Children.Add(new TreeNodeEx("123213") { IsShowCheckBox = true });
-            node.Children.Add(new TreeNodeEx("123213") { IsShowCheckBox = true });
-            node.Children.Add(new TreeNodeEx("123213") { IsShowCheckBox = true });
-            node.Children.Add(new TreeNodeEx("123213") { IsShowCheckBox = true });
+
+            // Additional children under root
+            for (int i = 0; i < 4; i++)
+            {
+                var cn = TreeNodeEx.CreateNode("123213");
+                cn.IsShowCheckBox = true;
+                node.Children.Add(cn);
+            }
+
             this.Provider = TreeViewPanelProvider.GetTreeViewPanelProvider([node]);
-            var menuItem = new CustomControl.Menu.MenuItemModel(
-                "全选",
-                () =>
-                {
-                    string aa = "123";
-                }
-            )
-            {
-                Icon = Icon,
-                Shortcut = new CustomControl.Menu.MenuItemModel.MenuShortcut(
-                    System.Windows.Input.ModifierKeys.Control,
-                    System.Windows.Input.Key.A
-                ),
-            };
-            var menuItem2 = new CustomControl.Menu.MenuItemModel(
+
+            var menuItem2 = new CustomControl.Menu.TreeViewMenu(
                 "新增",
-                () =>
-                {
-                    Provider.Controller.SourceTreeNodes.Add(new TreeNodeEx("新增节点"));
-                }
+                () => Provider.Controller.SourceTreeNodes.Add(TreeNodeEx.CreateNode("新增节点"))
             )
             {
                 Icon = Icon,
             };
-            var menuItem3 = new CustomControl.Menu.MenuItemModel(
+
+            var menuItem3 = new CustomControl.Menu.TreeViewMenu(
                 "对头节点进行展开/收缩",
                 () =>
                 {
-                    if (!Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsExpanded)
-                        Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsExpanded = true;
-                    else
-                        Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsExpanded = false;
+                    var head = Provider.Controller.SourceTreeNodes.FirstOrDefault();
+                    head.IsExpanded = !head.IsExpanded;
                 }
             )
             {
                 Icon = Icon,
             };
-            var menuItem4 = new CustomControl.Menu.MenuItemModel(
+
+            var menuItem4 = new CustomControl.Menu.TreeViewMenu(
                 "选中头节点",
                 () =>
                 {
-                    if (!Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsChecked.Value)
-                        Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsChecked = true;
-                    else
-                        Provider.Controller.ShowTreeNodeList.FirstOrDefault().IsChecked = false;
+                    var head = Provider.Controller.SourceTreeNodes.FirstOrDefault();
+                    head.IsChecked = !(head.IsChecked ?? false);
                 }
             )
             {
                 Icon = Icon,
             };
-            var menuItem5 = new CustomControl.Menu.MenuItemModel(
+
+            var menuItem5 = new CustomControl.Menu.TreeViewMenu(
                 "查看当前选中的所有节点数量",
                 () =>
                 {
-                    Debug.WriteLine(Provider.Controller.GetSelectedNodes().Count);
+                    Debug.WriteLine(Provider.Controller.SelectedNodes.Count);
                 }
             )
             {
                 Icon = Icon,
             };
-            Provider.Controller.Options.MenuItems.Add(menuItem);
+
             Provider.Controller.Options.MenuItems.Add(menuItem2);
             Provider.Controller.Options.MenuItems.Add(menuItem3);
             Provider.Controller.Options.MenuItems.Add(menuItem4);

@@ -61,13 +61,6 @@ namespace Su.WPF.CustomControl.TreeViewEx
 
     public class TreeNodeEx : ObservableObject
     {
-        internal static List<string> passProperties = new List<string>()
-        {
-            nameof(IsSelected),
-            nameof(IsExpanded),
-            nameof(IsEnabled),
-        };
-
         private TreeNodeEx _fatherNode;
         private string _name;
         private bool isSelected;
@@ -94,6 +87,18 @@ namespace Su.WPF.CustomControl.TreeViewEx
         }
         public TreeNodeExTextOptions TreeNodeExTextOptions { get; set; } =
             new TreeNodeExTextOptions();
+
+        private object _tooltip;
+
+        public object Tooltip
+        {
+            get { return _tooltip; }
+            set
+            {
+                _tooltip = value;
+                OnPropertyChanged();
+            }
+        }
 
         public object Data { get; set; }
 
@@ -200,65 +205,93 @@ namespace Su.WPF.CustomControl.TreeViewEx
         }
 
         public bool IsRightButtonWillShowMenu => MenuItems.Count != 0;
-        public BindingList<MenuItemModel> MenuItems { get; private set; }
+        public ObservableCollection<TreeNodeMenu> MenuItems { get; private set; }
 
         public ReadOnlyCollection<System.Windows.Controls.MenuItem> ShowMenuItemModels =>
             new([.. MenuItems.Select(x => x.MenuItem)]);
 
-        public BindingList<TreeNodeEx> Children { get; internal set; } = [];
+        public ObservableCollection<TreeNodeEx> Children { get; internal set; } = [];
 
         public TreeNodeExIconOptions TreeNodeExIconOptions { get; set; }
 
-        public TreeNodeEx(string text)
+        private TreeNodeEx(string text)
         {
             this.Text = text;
             MenuItems = [];
-            MenuItems.ListChanged += (o, e) =>
+            MenuItems.CollectionChanged += (o, e) =>
             {
                 OnPropertyChanged(nameof(IsRightButtonWillShowMenu));
             };
             TreeNodeExTextOptions = new TreeNodeExTextOptions() { Text = text };
-        }
 
-        /// <summary>
-        /// 浅拷贝当前节点（不拷贝子节点）
-        /// </summary>
-        internal TreeNodeEx ShallowCopy()
-        {
-            return new TreeNodeEx(Text)
+            this.Children.CollectionChanged += (o, e) =>
             {
-                Data = this.Data, // 浅拷贝Data引用
-                FatherNode = this.FatherNode,
-                Children =
-                    new BindingList<TreeNodeEx>() // 新的空列表
-                ,
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                {
+                    var nodes = (o as ObservableCollection<TreeNodeEx>);
+                    foreach (var item in nodes)
+                    {
+                        item.FatherNode = this;
+                        // 继承控制器的引用
+                        if (this.Controller != null)
+                        {
+                            item.Controller = this.Controller;
+                        }
+                    }
+                }
             };
         }
 
-        /// <summary>
-        /// 拷贝当前节点
-        /// </summary>
-        /// <param name="copyChildren">是否拷贝子节点</param>
-        internal TreeNodeEx Copy(bool copyChildren = false)
+        public static TreeNodeEx CreateNode(string text)
         {
-            if (!copyChildren)
-            {
-                return ShallowCopy();
-            }
-
-            // 拷贝当前节点和所有子节点
-            var copiedNode = ShallowCopy();
-
-            // 递归拷贝所有子节点
-            foreach (var child in this.Children)
-            {
-                var copiedChild = child.Copy(true); // 递归拷贝子节点
-                copiedChild.FatherNode = copiedNode;
-                copiedNode.Children.Add(copiedChild);
-            }
-
-            return copiedNode;
+            var node = new TreeNodeEx(text);
+            return node;
         }
+
+        public void Delete()
+        {
+            Controller?.DeleteNodes([this]);
+        }
+
+        public void AddChild(TreeNodeEx node)
+        {
+            Children.Add(node);
+        }
+
+        public void AddRange(IEnumerable<TreeNodeEx> nodes)
+        {
+            foreach (var item in nodes)
+            {
+                Children.Add(item);
+            }
+        }
+
+        public void DeleteChildByPredicate(Func<TreeNodeEx, bool> predicate)
+        {
+            foreach (var node in Children)
+            {
+                if (predicate?.Invoke(node) == true)
+                {
+                    Controller?.DeleteNodes([node]);
+                }
+            }
+        }
+
+        public void DeleteFirstChildByPredicate(Func<TreeNodeEx, bool> predicate)
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                if (predicate?.Invoke(Children[i]) == true)
+                {
+                    Children.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        private TreeNodeEx() { }
+
+        internal TreeViewController Controller { get; set; }
 
         public static RelayCommand MouseRightButtonDownCommand { get; } =
             new RelayCommand(treeviewItem =>

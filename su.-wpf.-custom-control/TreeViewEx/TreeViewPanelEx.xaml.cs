@@ -24,5 +24,16 @@ namespace Su.WPF.CustomControl.TreeViewEx
         {
             InitializeComponent();
         }
+
+        private void StackPanel_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DependencyObject dependencyObject)
+            {
+                var treeViewItem = VisualTreeHelperUtils.FindParent<TreeViewItem>(dependencyObject);
+                if (treeViewItem == null)
+                    return;
+                treeViewItem.Focus();
+            }
+        }
     }
 }

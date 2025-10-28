@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using TreeView = System.Windows.Controls.TreeView;
 
@@ -18,6 +19,8 @@ namespace Su.WPF.CustomControl.TreeViewEx
             GotFocus += OnTreeViewItemGotFocus;
             PreviewMouseLeftButtonDown += OnTreeViewItemPreviewMouseDown;
             PreviewMouseLeftButtonUp += OnTreeViewItemPreviewMouseUp;
+            // 添加键盘事件处理
+            KeyDown += OnTreeViewKeyDown;
         }
 
         private static TreeViewItem _selectTreeViewItemOnMouseUp;
@@ -101,27 +104,53 @@ namespace Su.WPF.CustomControl.TreeViewEx
             element.SetValue(StartItemProperty, value);
         }
 
-        private static void OnTreeViewItemGotFocus(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 处理键盘事件，支持 Ctrl+A 全选
+        /// </summary>
+        private static void OnTreeViewKeyDown(object sender, KeyEventArgs e)
         {
-            _selectTreeViewItemOnMouseUp = null;
-
-            if (e.OriginalSource is TreeView)
+            var treeView = sender as TreeView;
+            if (treeView == null)
                 return;
 
-            var treeViewItem = FindTreeViewItem(e.OriginalSource as DependencyObject);
+            // 处理 Ctrl+A 全选
             if (
-                Mouse.LeftButton == MouseButtonState.Pressed
-                && GetIsItemSelected(treeViewItem)
-                && Keyboard.Modifiers != ModifierKeys.Control
+                e.Key == Key.A
+                && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control
             )
             {
-                _selectTreeViewItemOnMouseUp = treeViewItem;
-                return;
+                SelectAllItems(treeView);
+                e.Handled = true;
             }
-
-            SelectItems(treeViewItem, sender as TreeView);
         }
 
+        /// <summary>
+        /// 全选所有 TreeViewItem
+        /// </summary>
+        private static void SelectAllItems(TreeView treeView)
+        {
+            if (treeView == null)
+                return;
+
+            var allItems = new List<TreeViewItem>();
+            GetAllItems(treeView, null, allItems);
+
+            // 选中所有项
+            foreach (var item in allItems)
+            {
+                SetIsItemSelected(item, true);
+            }
+
+            // 设置起始项为第一个项（可选）
+            if (allItems.Count > 0)
+            {
+                SetStartItem(treeView, allItems[0]);
+            }
+        }
+
+        /// <summary>
+        /// 根据不同的键盘修饰键选择项目
+        /// </summary>
         private static void SelectItems(TreeViewItem treeViewItem, TreeView treeView)
         {
             if (treeViewItem != null && treeView != null)
@@ -146,6 +175,27 @@ namespace Su.WPF.CustomControl.TreeViewEx
                     SelectSingleItem(treeView, treeViewItem);
                 }
             }
+        }
+
+        private static void OnTreeViewItemGotFocus(object sender, RoutedEventArgs e)
+        {
+            _selectTreeViewItemOnMouseUp = null;
+
+            if (e.OriginalSource is TreeView)
+                return;
+
+            var treeViewItem = FindTreeViewItem(e.OriginalSource as DependencyObject);
+            if (
+                Mouse.LeftButton == MouseButtonState.Pressed
+                && GetIsItemSelected(treeViewItem)
+                && Keyboard.Modifiers != ModifierKeys.Control
+            )
+            {
+                _selectTreeViewItemOnMouseUp = treeViewItem;
+                return;
+            }
+
+            SelectItems(treeViewItem, sender as TreeView);
         }
 
         private static void OnTreeViewItemPreviewMouseDown(object sender, MouseEventArgs e)
@@ -269,7 +319,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
 
                 ICollection<TreeViewItem> allItems = new List<TreeViewItem>();
                 GetAllItems(treeView, null, allItems);
-                //DeSelectAllItems(treeView, null);
+
                 bool isBetween = false;
                 foreach (var item in allItems)
                 {
@@ -327,6 +377,75 @@ namespace Su.WPF.CustomControl.TreeViewEx
                         GetAllItems(null, item, allItems);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 获取所有可见的 TreeViewItem（包括展开的和未展开的）
+        /// </summary>
+        private static void GetAllVisibleItems(
+            TreeView treeView,
+            TreeViewItem treeViewItem,
+            ICollection<TreeViewItem> allItems
+        )
+        {
+            if (treeView != null)
+            {
+                for (int i = 0; i < treeView.Items.Count; i++)
+                {
+                    var item =
+                        treeView.ItemContainerGenerator.ContainerFromIndex(i) as TreeViewItem;
+                    if (item != null)
+                    {
+                        allItems.Add(item);
+                        // 如果项是展开的，递归获取其子项
+                        if (item.IsExpanded)
+                        {
+                            GetAllVisibleItems(null, item, allItems);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < treeViewItem.Items.Count; i++)
+                {
+                    var item =
+                        treeViewItem.ItemContainerGenerator.ContainerFromIndex(i) as TreeViewItem;
+                    if (item != null)
+                    {
+                        allItems.Add(item);
+                        // 如果项是展开的，递归获取其子项
+                        if (item.IsExpanded)
+                        {
+                            GetAllVisibleItems(null, item, allItems);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 全选当前可见项（只选中展开的项）
+        /// </summary>
+        private static void SelectAllVisibleItems(TreeView treeView)
+        {
+            if (treeView == null)
+                return;
+
+            var visibleItems = new List<TreeViewItem>();
+            GetAllVisibleItems(treeView, null, visibleItems);
+
+            // 选中所有可见项
+            foreach (var item in visibleItems)
+            {
+                SetIsItemSelected(item, true);
+            }
+
+            // 设置起始项为第一个项
+            if (visibleItems.Count > 0)
+            {
+                SetStartItem(treeView, visibleItems[0]);
             }
         }
     }

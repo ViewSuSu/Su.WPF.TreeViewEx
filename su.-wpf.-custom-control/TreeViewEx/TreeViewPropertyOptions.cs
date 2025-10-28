@@ -9,30 +9,11 @@ namespace Su.WPF.CustomControl.TreeViewEx
 {
     public class TreeViewPropertyOptions : ObservableObject
     {
-        public event EventHandler FilterOptionChanged;
-
-        private FileterOptions _fileterOption = new FileterOptions();
-
-        /// <summary>
-        /// 过滤选项
-        /// </summary>
-        public FileterOptions FileterOption
-        {
-            get => _fileterOption;
-            internal set
-            {
-                if (_fileterOption != value)
-                {
-                    _fileterOption = value;
-                    FilterOptionChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
         public ReadOnlyCollection<MenuItem> ShowMenuItemModels { get; private set; }
 
         private readonly TreeViewPanel treeViewPanel;
 
-        public BindingList<MenuItemModel> MenuItems { get; set; }
+        public BindingList<TreeViewMenu> MenuItems { get; set; }
         public bool IsRightButtonWillShowMenu => MenuItems.Count != 0;
 
         internal TreeViewPropertyOptions(TreeViewPanel treeViewPanel)
@@ -63,7 +44,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
                         new KeyGesture(currentItem.Shortcut.Key, currentItem.Shortcut.ModifierKeys)
                     );
                     this.treeViewPanel.InputBindings.Add(inputBinding);
-                    currentItem.Header = currentItem.Header + currentItem.ShortcutDisplay;
+                    currentItem.Header += currentItem.ShortcutDisplay;
                 }
             };
         }

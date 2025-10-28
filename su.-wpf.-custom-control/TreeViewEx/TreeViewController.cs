@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace Su.WPF.CustomControl.TreeViewEx
 {
@@ -20,6 +23,9 @@ namespace Su.WPF.CustomControl.TreeViewEx
 
     public class TreeViewController : ObservableObject
     {
+        public event EventHandler<TreeNodeEx> SelectedNodeChanged;
+        public List<TreeNodeEx> SelectedNodes { get; set; } = [];
+
         private BindingList<TreeNodeEx> _sourceTreeNodes;
 
         /// <summary>
@@ -47,29 +53,19 @@ namespace Su.WPF.CustomControl.TreeViewEx
         /// 显示数据，只读
         /// </summary>
         public ReadOnlyCollection<TreeNodeEx> ShowTreeNodeList { get; private set; }
-
         public TreeViewPropertyOptions Options { get; internal set; }
-
-        private TreeNodeEx _selectedTreeNode;
-        public TreeNodeEx SelectedTreeNode
-        {
-            get { return _selectedTreeNode; }
-            set
-            {
-                _selectedTreeNode = value;
-                OnPropertyChanged();
-            }
-        }
 
         internal TreeViewController(IList<TreeNodeEx> sourceTreeNodes, TreeViewPanel treeViewPanel)
         {
             this.SourceTreeNodes = new BindingList<TreeNodeEx>(sourceTreeNodes);
             Options = new TreeViewPropertyOptions(treeViewPanel);
             ShowTreeNodeList = new ReadOnlyCollection<TreeNodeEx>([]);
-
+            Options.FilterOptionChanged += (o, e) =>
+            {
+                RefreshDisplayList();
+            };
             // 绑定事件
             SourceTreeNodes.ListChanged += SourceTreeNodes_ListChanged;
-
             RefreshDisplayList();
         }
 
@@ -87,7 +83,14 @@ namespace Su.WPF.CustomControl.TreeViewEx
         /// </summary>
         private void SourceTreeNodes_ListChanged(object sender, ListChangedEventArgs e)
         {
-            RefreshDisplayList();
+            if (
+                e != null
+                && e.PropertyDescriptor != null
+                && !TreeNodeEx.passProperties.Contains(e.PropertyDescriptor.Name)
+            )
+            {
+                RefreshDisplayList();
+            }
         }
 
         /// <summary>
@@ -227,7 +230,20 @@ namespace Su.WPF.CustomControl.TreeViewEx
             if (string.IsNullOrEmpty(nameKey))
                 return true;
 
-            return node.Name?.IndexOf(nameKey, StringComparison.OrdinalIgnoreCase) >= 0;
+            return node.Text?.IndexOf(nameKey, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public List<TreeNodeEx> GetSelectedNodes()
+        {
+            var selectedNodes = new List<TreeNodeEx>();
+            foreach (var node in ShowTreeNodeList)
+            {
+                if (node.IsSelected)
+                {
+                    selectedNodes.Add(node);
+                }
+            }
+            return selectedNodes;
         }
     }
 }

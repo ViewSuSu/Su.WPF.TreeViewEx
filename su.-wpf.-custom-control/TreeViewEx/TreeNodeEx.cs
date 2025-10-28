@@ -1,25 +1,75 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Su.WPF.CustomControl.Menu;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 
 namespace Su.WPF.CustomControl.TreeViewEx
 {
-    public enum ImageSourceLocation
+    public class TreeNodeExIconOptions : ObservableObject
     {
-        Left,
-        Middle,
-        Right,
+        private ImageSource _icon;
+        public ImageSource Icon
+        {
+            get { return _icon; }
+            set
+            {
+                _icon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _width = 16;
+        public double Width
+        {
+            get { return _width; }
+            set
+            {
+                _width = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public TreeNodeExIconOptions(ImageSource icon)
+        {
+            this.Icon = icon;
+        }
+
+        public bool IsShowImageSource => Icon != null && Width > 0;
+    }
+
+    public class TreeNodeExTextOptions : ObservableObject
+    {
+        private string _text;
+        public string Text
+        {
+            get { return _text; }
+            set
+            {
+                _text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double FontSize { get; set; }
+        public FontWeight FontWeight { get; set; }
     }
 
     public class TreeNodeEx : ObservableObject
     {
+        internal static List<string> passProperties = new List<string>()
+        {
+            nameof(IsSelected),
+            nameof(IsExpanded),
+            nameof(IsEnabled),
+        };
+
         private TreeNodeEx _fatherNode;
         private string _name;
-        private ImageSource _imageSource;
-        private ImageSourceLocation _imageSourceLocation;
         private bool isSelected;
         private bool _isEnabled = true;
         private bool _isShowCheckBox;
@@ -33,17 +83,21 @@ namespace Su.WPF.CustomControl.TreeViewEx
                 OnPropertyChanged(nameof(FatherNode));
             }
         }
-        public string Name
+        public string Text
         {
             get { return _name; }
             set
             {
                 _name = value;
-                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Text));
             }
         }
+        public TreeNodeExTextOptions TreeNodeExTextOptions { get; set; } =
+            new TreeNodeExTextOptions();
 
         public object Data { get; set; }
+
+        internal const string IsSelectedPropertyName = nameof(IsSelected);
 
         public bool IsSelected
         {
@@ -85,6 +139,66 @@ namespace Su.WPF.CustomControl.TreeViewEx
             }
         }
 
+        private bool? _isChecked = false;
+        public bool? IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (_isChecked == value)
+                    return;
+
+                _isChecked = value;
+                OnPropertyChanged();
+
+                // 向下递归影响子节点
+                if (_isChecked.HasValue)
+                {
+                    foreach (var child in Children)
+                    {
+                        child.ForceSetIsChecked(_isChecked.Value);
+                    }
+                }
+
+                // 向上通知父节点判断状态
+                UpdateParentCheckState();
+            }
+        }
+
+        public Brush HighlightColorBrush => new SolidColorBrush(HighlightColor);
+
+        public Color HighlightColor { get; set; } = Color.FromRgb(0, 191, 255);
+
+        internal void ForceSetIsChecked(bool value)
+        {
+            _isChecked = value;
+            OnPropertyChanged(nameof(IsChecked));
+
+            foreach (var child in Children)
+            {
+                child.ForceSetIsChecked(value);
+            }
+        }
+
+        private void UpdateParentCheckState()
+        {
+            if (FatherNode == null)
+                return;
+
+            bool allChecked = FatherNode.Children.All(x => x.IsChecked == true);
+            bool allUnchecked = FatherNode.Children.All(x => x.IsChecked == false);
+
+            FatherNode._isChecked =
+                allChecked ? true
+                : allUnchecked ? false
+                : (bool?)null;
+
+            FatherNode.OnPropertyChanged(nameof(IsChecked));
+
+            // 向上递归检查
+            FatherNode.UpdateParentCheckState();
+        }
+
         public bool IsRightButtonWillShowMenu => MenuItems.Count != 0;
         public BindingList<MenuItemModel> MenuItems { get; private set; }
 
@@ -93,45 +207,25 @@ namespace Su.WPF.CustomControl.TreeViewEx
 
         public BindingList<TreeNodeEx> Children { get; internal set; } = [];
 
-        public ImageSource icon
-        {
-            get { return _imageSource; }
-            set
-            {
-                _imageSource = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsShowImageSource));
-            }
-        }
+        public TreeNodeExIconOptions TreeNodeExIconOptions { get; set; }
 
-        public ImageSourceLocation ImageSourceLocation
+        public TreeNodeEx(string text)
         {
-            get { return _imageSourceLocation; }
-            set
-            {
-                _imageSourceLocation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsShowImageSource => icon != null;
-
-        public TreeNodeEx(string name)
-        {
-            this.Name = name;
+            this.Text = text;
             MenuItems = [];
             MenuItems.ListChanged += (o, e) =>
             {
                 OnPropertyChanged(nameof(IsRightButtonWillShowMenu));
             };
+            TreeNodeExTextOptions = new TreeNodeExTextOptions() { Text = text };
         }
 
         /// <summary>
         /// 浅拷贝当前节点（不拷贝子节点）
         /// </summary>
-        public TreeNodeEx ShallowCopy()
+        internal TreeNodeEx ShallowCopy()
         {
-            return new TreeNodeEx(Name)
+            return new TreeNodeEx(Text)
             {
                 Data = this.Data, // 浅拷贝Data引用
                 FatherNode = this.FatherNode,
@@ -145,7 +239,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
         /// 拷贝当前节点
         /// </summary>
         /// <param name="copyChildren">是否拷贝子节点</param>
-        public TreeNodeEx Copy(bool copyChildren = false)
+        internal TreeNodeEx Copy(bool copyChildren = false)
         {
             if (!copyChildren)
             {
@@ -166,7 +260,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
             return copiedNode;
         }
 
-        public RelayCommand MouseRightButtonDownCommand { get; set; } =
+        public static RelayCommand MouseRightButtonDownCommand { get; } =
             new RelayCommand(treeviewItem =>
             {
                 if (treeviewItem is TreeViewItem item)

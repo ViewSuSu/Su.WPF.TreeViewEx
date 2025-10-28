@@ -9,12 +9,26 @@ namespace Su.WPF.CustomControl.TreeViewEx
 {
     public class TreeViewPropertyOptions : ObservableObject
     {
-        public ReadOnlyCollection<MenuItem> ShowMenuItemModels { get; private set; }
+        public event EventHandler FilterOptionChanged;
+
+        private FileterOptions _fileterOption = new FileterOptions();
 
         /// <summary>
         /// 过滤选项
         /// </summary>
-        public FileterOptions FileterOption { get; internal set; } = new FileterOptions();
+        public FileterOptions FileterOption
+        {
+            get => _fileterOption;
+            internal set
+            {
+                if (_fileterOption != value)
+                {
+                    _fileterOption = value;
+                    FilterOptionChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+        public ReadOnlyCollection<MenuItem> ShowMenuItemModels { get; private set; }
 
         private readonly TreeViewPanel treeViewPanel;
 

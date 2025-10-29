@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\su.-wpf.-custom-control\Su.WPF.CustomControl.csproj" />
+    <ProjectReference Include="..\Su.WPF.TreeViewEx\Su.WPF.TreeViewEx.csproj" />
   </ItemGroup>
 
   <ItemGroup>

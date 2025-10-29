@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Su.WPF.CustomControl", "su.-wpf.-custom-control\Su.WPF.CustomControl.csproj", "{79484540-EDBA-0D7A-4D1D-DC84700E669E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Su.WPF.Test", "Su.WPF.Test\Su.WPF.Test.csproj", "{BDECFB92-9D0A-A8DF-5464-A3528AD19A6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Su.WPF.TreeViewEx", "Su.WPF.TreeViewEx\Su.WPF.TreeViewEx.csproj", "{392F251B-0232-F660-0995-DFCDF9D4FA51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{79484540-EDBA-0D7A-4D1D-DC84700E669E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79484540-EDBA-0D7A-4D1D-DC84700E669E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{79484540-EDBA-0D7A-4D1D-DC84700E669E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79484540-EDBA-0D7A-4D1D-DC84700E669E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BDECFB92-9D0A-A8DF-5464-A3528AD19A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDECFB92-9D0A-A8DF-5464-A3528AD19A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDECFB92-9D0A-A8DF-5464-A3528AD19A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDECFB92-9D0A-A8DF-5464-A3528AD19A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{392F251B-0232-F660-0995-DFCDF9D4FA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{392F251B-0232-F660-0995-DFCDF9D4FA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{392F251B-0232-F660-0995-DFCDF9D4FA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{392F251B-0232-F660-0995-DFCDF9D4FA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

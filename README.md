@@ -2,7 +2,7 @@
 
 ## 概述
 
-**天下苦TreeView久矣！** 网上充斥着各种五花门的解决方案，从复杂的自定义模板到繁琐的数据绑定，开发者们为了在WPF中实现一个功能完整的TreeView控件可谓是绞尽脑汁。然而，至今仍没有一个统一的、完整的、易于使用的封装方案。
+**天下苦TreeView久矣！** 网上充斥着各种五花八门的解决方案，从复杂的自定义模板到繁琐的数据绑定，开发者们为了在WPF中实现一个功能完整的TreeView控件可谓是绞尽脑汁。然而，至今仍没有一个统一的、完整的、易于使用的封装方案。
 
 **现在我给出一种可行的方案！**
 
@@ -191,18 +191,63 @@ child.IsShowCheckBox = true;
 child.IsChecked = true;
 ```
 
-### 5. **菜单系统**
+### 5. **菜单系统与快捷键**
+
+#### 树级别菜单（支持快捷键）
 
 ```csharp
-// 树级别菜单（全局）
-provider.Controller.Options.MenuItemModels.Add(
-    new TreeViewMenu("刷新", RefreshAction)
-    {
-        Shortcut = new MenuShortcut(ModifierKeys.Control, Key.R)
-    }
-);
+// 基本快捷键
+var refreshMenu = new TreeViewMenu("刷新", RefreshAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.R)
+};
 
-// 节点级别菜单（上下文相关）
+// 组合快捷键
+var saveMenu = new TreeViewMenu("保存", SaveAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.S)
+};
+
+// 复杂快捷键组合
+var advancedMenu = new TreeViewMenu("高级操作", AdvancedAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.F1)
+};
+
+provider.Controller.Options.MenuItemModels.Add(refreshMenu);
+provider.Controller.Options.MenuItemModels.Add(saveMenu);
+provider.Controller.Options.MenuItemModels.Add(advancedMenu);
+```
+
+#### 快捷键自动注册机制
+
+```csharp
+// 系统会自动：
+// 1. 注册全局快捷键到 TreeViewPanel
+// 2. 在菜单文本后显示快捷键提示
+// 例如："刷新 (Ctrl+R)"
+```
+
+#### 支持的修饰键组合
+
+```csharp
+// 单一修饰键
+new MenuShortcut(ModifierKeys.Control, Key.A)      // Ctrl+A
+new MenuShortcut(ModifierKeys.Alt, Key.F4)         // Alt+F4  
+new MenuShortcut(ModifierKeys.Shift, Key.Delete)   // Shift+Delete
+
+// 组合修饰键
+new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.N)  // Ctrl+Shift+N
+new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.T)    // Alt+Ctrl+T
+
+// 无修饰键（功能键等）
+new MenuShortcut(ModifierKeys.None, Key.F5)        // F5
+new MenuShortcut(ModifierKeys.None, Key.Escape)    // Esc
+```
+
+#### 节点级别菜单
+
+```csharp
 var fileNode = TreeNodeEx.CreateNode("文件");
 fileNode.MenuItemModels.Add(
     new TreeNodeMenu("打开", node => OpenFile(node))
@@ -219,6 +264,54 @@ var copiedNode = originalNode.Copy();
 var checkedNodes = parent.GetCheckedChildren();
 var allCheckedDescendants = parent.GetAllCheckedDescendants();
 var hasCheckedChildren = parent.HasCheckedChildren();
+```
+
+## ⌨️ 快捷键系统详解
+
+### 快捷键配置方式
+
+```csharp
+// 1. 创建菜单时直接设置快捷键
+var menu = new TreeViewMenu("新建", CreateNewAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.N)
+};
+
+// 2. 后期设置快捷键
+menu.Shortcut = new MenuShortcut(ModifierKeys.Control, Key.O);
+```
+
+### 支持的快捷键类型
+
+| 类型 | 示例 | 使用场景 |
+|------|------|----------|
+| **基础组合** | `Ctrl+S`, `Ctrl+C` | 常用操作 |
+| **复杂组合** | `Ctrl+Shift+N`, `Alt+Ctrl+T` | 高级功能 |
+| **功能键** | `F5`, `F12` | 刷新、调试等 |
+| **导航键** | `Delete`, `Enter` | 删除、确认 |
+
+### 快捷键显示规则
+
+```csharp
+// 自动在菜单文本后显示快捷键提示
+// "刷新" → "刷新 (Ctrl+R)"
+// "全选" → "全选 (Ctrl+A)"
+// "新建项目" → "新建项目 (Ctrl+Shift+N)"
+
+// 可通过 ShortcutDisplay 属性获取显示文本
+string displayText = menu.ShortcutDisplay;
+```
+
+### 快捷键冲突处理
+
+```csharp
+// 系统会自动处理快捷键注册
+// 如果同一快捷键被多次注册，后注册的会覆盖先注册的
+
+// 建议的快捷键分配策略：
+// - 常用操作使用简单组合（Ctrl+S, Ctrl+C）
+// - 特定功能使用复杂组合（Ctrl+Shift+*）
+// - 系统级操作使用功能键（F1-F12）
 ```
 
 ## 📋 API 参考
@@ -245,7 +338,7 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 | `GetCheckedChildrenCount()` | 获取选中的子节点数量 |
 | `HasCheckedChildren()` | 检查是否有选中的子节点 |
 
-### 菜单配置
+### 菜单和快捷键
 
 | 属性/方法 | 描述 |
 |-----------|------|
@@ -254,6 +347,8 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 | `new TreeViewMenu(header, action)` | 创建树级别菜单 |
 | `new TreeNodeMenu(header, action)` | 创建节点级别菜单 |
 | `menu.Shortcut` | 设置菜单快捷键 |
+| `menu.ShortcutDisplay` | 获取快捷键显示文本 |
+| `new MenuShortcut(modifiers, key)` | 创建快捷键配置 |
 
 ## 🎯 适用场景
 

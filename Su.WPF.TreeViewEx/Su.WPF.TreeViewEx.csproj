@@ -9,15 +9,19 @@
 	  <Authors>Su</Authors>
 	  <Version>1.0.0</Version>
 	  <Product>$(MSBuildProjectName)</Product>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-	<PropertyGroup Condition="!$([System.String]::Copy('$(Configuration)').Contains('D'))">
-		<PackageId>$(MSBuildProjectName)</PackageId>
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="/" Link="README.md" />
+	</ItemGroup>
+	<PropertyGroup>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageDescription>一套完整的、面向对象的WPF树TreeView控件的封装，让开发者从繁琐的模板定义、数据绑定、事件处理中解放出来，专注于业务逻辑的实现。</PackageDescription>
-		<PackageTags>Revit;Revit-API;ProgressBar;StatusBar</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$([System.String]::Copy('$(Configuration)').Contains('D'))">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageId>$(MSBuildProjectName)</PackageId>
+		<PackageDescription>一套完整的、面向对象的WPF树TreeView控件封装。</PackageDescription>
+		<PackageTags>WPF;TreeView;C#;Csharp</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>$(Version)</Version>
 		<PackageOutputPath>$(SolutionDir)\Nuget\$(MSBuildProjectName)\</PackageOutputPath>
 		<RepositoryUrl>https://github.com/ViewSuSu/Su.WPF.TreeViewEx</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

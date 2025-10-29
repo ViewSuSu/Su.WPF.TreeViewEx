@@ -8,6 +8,32 @@
 
 该项目提供了一套完整的、面向对象的树节点操作方式，让开发者从繁琐的模板定义、数据绑定、事件处理中解放出来，专注于业务逻辑的实现。
 
+## 📦 NuGet 包安装
+
+### 通过包管理器控制台安装
+
+```powershell
+Install-Package Su.WPF.TreeViewEx
+```
+
+### 通过 .NET CLI 安装
+
+```bash
+dotnet add package Su.WPF.TreeViewEx
+```
+
+### 通过 Visual Studio 包管理器安装
+
+1. 右键点击项目 → **管理 NuGet 程序包**
+2. 搜索 `Su.WPF.TreeViewEx`
+3. 点击 **安装**
+
+### 包引用 (csproj)
+
+```xml
+<PackageReference Include="Su.WPF.TreeViewEx" Version="1.0.0" />
+```
+
 ## 框架支持
 
 本封装库支持以下框架版本：
@@ -98,7 +124,7 @@ node.MenuItemModels.Add(menu);     // 正确的集合操作
 
 ## 🚀 快速开始
 
-### 1. XAML 配置
+### 1. 安装 NuGet 包后，在 XAML 中配置
 
 ```xml
 <Grid>
@@ -106,9 +132,20 @@ node.MenuItemModels.Add(menu);     // 正确的集合操作
 </Grid>
 ```
 
-### 2. ViewModel 基础结构
+### 2. 添加命名空间引用（如果需要）
+
+```xml
+<Window x:Class="YourApp.MainWindow"
+        xmlns:treeView="clr-namespace:Su.WPF.CustomControl.TreeViewEx;assembly=Su.WPF.TreeViewEx"
+        ...>
+```
+
+### 3. ViewModel 基础结构
 
 ```csharp
+using Su.WPF.CustomControl.TreeViewEx;
+using Su.WPF.CustomControl.Menu;
+
 public class MainWindowViewModel
 {
     public TreeViewExProvider Provider { get; }
@@ -208,41 +245,8 @@ var saveMenu = new TreeViewMenu("保存", SaveAction)
     Shortcut = new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.S)
 };
 
-// 复杂快捷键组合
-var advancedMenu = new TreeViewMenu("高级操作", AdvancedAction)
-{
-    Shortcut = new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.F1)
-};
-
 provider.Controller.Options.MenuItemModels.Add(refreshMenu);
 provider.Controller.Options.MenuItemModels.Add(saveMenu);
-provider.Controller.Options.MenuItemModels.Add(advancedMenu);
-```
-
-#### 快捷键自动注册机制
-
-```csharp
-// 系统会自动：
-// 1. 注册全局快捷键到 TreeViewPanel
-// 2. 在菜单文本后显示快捷键提示
-// 例如："刷新 (Ctrl+R)"
-```
-
-#### 支持的修饰键组合
-
-```csharp
-// 单一修饰键
-new MenuShortcut(ModifierKeys.Control, Key.A)      // Ctrl+A
-new MenuShortcut(ModifierKeys.Alt, Key.F4)         // Alt+F4  
-new MenuShortcut(ModifierKeys.Shift, Key.Delete)   // Shift+Delete
-
-// 组合修饰键
-new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.N)  // Ctrl+Shift+N
-new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.T)    // Alt+Ctrl+T
-
-// 无修饰键（功能键等）
-new MenuShortcut(ModifierKeys.None, Key.F5)        // F5
-new MenuShortcut(ModifierKeys.None, Key.Escape)    // Esc
 ```
 
 #### 节点级别菜单
@@ -264,54 +268,6 @@ var copiedNode = originalNode.Copy();
 var checkedNodes = parent.GetCheckedChildren();
 var allCheckedDescendants = parent.GetAllCheckedDescendants();
 var hasCheckedChildren = parent.HasCheckedChildren();
-```
-
-## ⌨️ 快捷键系统详解
-
-### 快捷键配置方式
-
-```csharp
-// 1. 创建菜单时直接设置快捷键
-var menu = new TreeViewMenu("新建", CreateNewAction)
-{
-    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.N)
-};
-
-// 2. 后期设置快捷键
-menu.Shortcut = new MenuShortcut(ModifierKeys.Control, Key.O);
-```
-
-### 支持的快捷键类型
-
-| 类型 | 示例 | 使用场景 |
-|------|------|----------|
-| **基础组合** | `Ctrl+S`, `Ctrl+C` | 常用操作 |
-| **复杂组合** | `Ctrl+Shift+N`, `Alt+Ctrl+T` | 高级功能 |
-| **功能键** | `F5`, `F12` | 刷新、调试等 |
-| **导航键** | `Delete`, `Enter` | 删除、确认 |
-
-### 快捷键显示规则
-
-```csharp
-// 自动在菜单文本后显示快捷键提示
-// "刷新" → "刷新 (Ctrl+R)"
-// "全选" → "全选 (Ctrl+A)"
-// "新建项目" → "新建项目 (Ctrl+Shift+N)"
-
-// 可通过 ShortcutDisplay 属性获取显示文本
-string displayText = menu.ShortcutDisplay;
-```
-
-### 快捷键冲突处理
-
-```csharp
-// 系统会自动处理快捷键注册
-// 如果同一快捷键被多次注册，后注册的会覆盖先注册的
-
-// 建议的快捷键分配策略：
-// - 常用操作使用简单组合（Ctrl+S, Ctrl+C）
-// - 特定功能使用复杂组合（Ctrl+Shift+*）
-// - 系统级操作使用功能键（F1-F12）
 ```
 
 ## 📋 API 参考
@@ -388,5 +344,6 @@ string displayText = menu.ShortcutDisplay;
 
 ## 🔗 仓库地址
 
+* **NuGet 包**: [Su.WPF.TreeViewEx](https://www.nuget.org/packages/Su.WPF.TreeViewEx/)
 * Gitee：[https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
 * GitHub：[https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)

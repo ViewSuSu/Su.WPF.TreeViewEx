@@ -96,205 +96,261 @@ node.MenuItemModels.Add(menu);     // 正确的集合操作
 * **拖拽支持**：完整的拖拽操作支持。
 * **过滤搜索**：实时过滤和搜索功能。
 
-## 快速开始
+## 🚀 快速开始
 
-### 1. 基本使用 - 告别复杂配置！
+### 1. XAML 配置
 
-```csharp
-// 传统方式：需要定义模板、绑定、样式...
-// 该项目的方式：3行代码搞定！
-var nodes = new List<TreeNodeEx>
-{
-    TreeNodeEx.CreateNode("根节点1"),
-    TreeNodeEx.CreateNode("根节点2")
-};
-var provider = TreeViewExProvider.GetTreeViewPanelProvider(nodes);
-// <ContentControl Content="{Binding Provider.TreeView, Mode=OneWay}" />
+```xml
+<Grid>
+    <ContentControl Content="{Binding Provider.TreeView, Mode=OneWay}" />
+</Grid>
 ```
 
-## 🎨 完整的样式配置系统
-
-### 1. **图标配置 (TreeNodeExIconOptions)**
+### 2. ViewModel 基础结构
 
 ```csharp
-// 完整的图标配置系统
-var node = TreeNodeEx.CreateNode("带图标的节点");
-
-// 设置图标
-node.TreeNodeExIconOptions.Icon = BitmapFrame.Create(new Uri("pack://application:,,,/icon.png"));
-// 或者从资源中加载
-node.TreeNodeExIconOptions.Icon = (ImageSource)FindResource("MyIcon");
-
-// 自定义图标大小
-node.TreeNodeExIconOptions.Width = 24;  // 默认16，可调整
-
-// 自动显示逻辑：Icon不为null且Width>0时显示图标
-if (node.TreeNodeExIconOptions.IsShowImageSource)
+public class MainWindowViewModel
 {
-    // 图标会显示在节点文本前
+    public TreeViewExProvider Provider { get; }
+    public List<TreeNodeEx> TreeNodeExs { get; set; }
+
+    public MainWindowViewModel()
+    {
+        // 1. 创建树节点结构
+        InitializeTreeNodes();
+        
+        // 2. 获取树视图提供者
+        Provider = TreeViewExProvider.GetTreeViewPanelProvider(TreeNodeExs);
+        
+        // 3. 配置菜单系统
+        ConfigureMenus();
+    }
+
+    private void InitializeTreeNodes()
+    {
+        // 创建节点结构
+        TreeNodeExs = new List<TreeNodeEx>
+        {
+            TreeNodeEx.CreateNode("根节点")
+        };
+    }
+
+    private void ConfigureMenus()
+    {
+        // 配置树级别和节点级别菜单
+    }
 }
 ```
 
-### 2. **文本样式配置 (TreeNodeExTextOptions)**
+## 🎨 核心功能使用
+
+### 1. **基本树结构创建**
 
 ```csharp
-var node = TreeNodeEx.CreateNode("样式化文本");
+// 创建根节点
+var root = TreeNodeEx.CreateNode("我的项目");
 
-// 字体大小配置
-node.TreeNodeExTextOptions.FontSize = 14;
-
-// 字体粗细配置
-node.TreeNodeExTextOptions.FontWeight = FontWeights.Bold;
-node.TreeNodeExTextOptions.FontWeight = FontWeights.SemiBold;
-node.TreeNodeExTextOptions.FontWeight = FontWeights.Normal;
-
-// 实际应用场景
-var titleNode = TreeNodeEx.CreateNode("章节标题");
-titleNode.TreeNodeExTextOptions.FontSize = 16;
-titleNode.TreeNodeExTextOptions.FontWeight = FontWeights.Bold;
-
-var contentNode = TreeNodeEx.CreateNode("内容文本");  
-contentNode.TreeNodeExTextOptions.FontSize = 12;
-contentNode.TreeNodeExTextOptions.FontWeight = FontWeights.Normal;
-```
-
-### 3. **高亮颜色配置**
-
-```csharp
-node.HighlightColor = Colors.Blue;
-node.HighlightColor = Color.FromRgb(255, 0, 0);
-node.HighlightColor = Color.FromArgb(255, 0, 120, 215);
-
-Brush highlightBrush = node.HighlightColorBrush;
-```
-
-### 4. 完整的树结构构建
-
-```csharp
-var project = TreeNodeEx.CreateNode("我的项目");
-project.TreeNodeExIconOptions.Icon = LoadIcon("project.png");
-project.TreeNodeExIconOptions.Width = 20;
-
-var srcFolder = project.AddChild("源代码");
-srcFolder.TreeNodeExIconOptions.Icon = folderIcon;
+// 添加子节点
+var srcFolder = root.AddChild("源代码");
 srcFolder.AddChild("MainWindow.xaml.cs");
 srcFolder.AddChild("MainViewModel.cs");
 
-var configFolder = project.AddChild("配置");
-configFolder.AddChild("app.config");
-
-// 添加右键菜单
-srcFolder.MenuItemModels.Add(new TreeNodeMenu("新建文件", node => {
-    node.AddChild($"新文件_{DateTime.Now:HHmmss}.cs");
-}));
+// 批量添加
+root.AddRange(new[] {
+    TreeNodeEx.CreateNode("文档"),
+    TreeNodeEx.CreateNode("资源")
+});
 ```
 
-### 5. 复选框功能
+### 2. **图标配置**
+
+```csharp
+var node = TreeNodeEx.CreateNode("带图标的节点");
+
+// 设置图标和大小
+node.TreeNodeExIconOptions.Icon = yourImageSource;
+node.TreeNodeExIconOptions.Width = 20;
+```
+
+### 3. **文本样式配置**
+
+```csharp
+var titleNode = TreeNodeEx.CreateNode("标题");
+titleNode.TreeNodeExTextOptions.FontSize = 16;
+titleNode.TreeNodeExTextOptions.FontWeight = FontWeights.Bold;
+```
+
+### 4. **复选框系统**
 
 ```csharp
 var parent = TreeNodeEx.CreateNode("父节点");
 parent.IsShowCheckBox = true;
 
-var child1 = parent.AddChild("子节点1");
-child1.IsShowCheckBox = true;
-child1.IsChecked = true;
-
-var child2 = parent.AddChild("子节点2"); 
-child2.IsShowCheckBox = true;
-child2.IsChecked = false;
+var child = parent.AddChild("子节点");
+child.IsShowCheckBox = true;
+child.IsChecked = true;
 ```
 
-### 6. 菜单系统与快捷键
+### 5. **菜单系统与快捷键**
+
+#### 树级别菜单（支持快捷键）
 
 ```csharp
-// 树级别菜单
-provider.Controller.Options.MenuItemModels.Add(new TreeViewMenu("刷新", RefreshTree)
+// 基本快捷键
+var refreshMenu = new TreeViewMenu("刷新", RefreshAction)
 {
-    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.R),
-    Icon = refreshIcon
-});
-
-// 节点级别菜单
-var fileNode = TreeNodeEx.CreateNode("重要文件.txt");
-fileNode.MenuItemModels.Add(new TreeNodeMenu("加密", node => EncryptFile(node)));
-fileNode.MenuItemModels.Add(new TreeNodeMenu("备份", node => BackupFile(node)));
-
-// 快捷键示例
-var menu = new TreeViewMenu("全选", SelectAllAction)
-{
-    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.A)
+    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.R)
 };
-var complexShortcut = new TreeViewMenu("高级操作", AdvancedAction)
+
+// 组合快捷键
+var saveMenu = new TreeViewMenu("保存", SaveAction)
 {
     Shortcut = new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.S)
 };
+
+// 复杂快捷键组合
+var advancedMenu = new TreeViewMenu("高级操作", AdvancedAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.F1)
+};
+
+provider.Controller.Options.MenuItemModels.Add(refreshMenu);
+provider.Controller.Options.MenuItemModels.Add(saveMenu);
+provider.Controller.Options.MenuItemModels.Add(advancedMenu);
 ```
 
-### 7. 新增功能
+#### 快捷键自动注册机制
 
 ```csharp
-var original = GetComplexNodeStructure();
-var copied = original.Copy();
-var copiedTo = original.CopyTo(targetParent);
+// 系统会自动：
+// 1. 注册全局快捷键到 TreeViewPanel
+// 2. 在菜单文本后显示快捷键提示
+// 例如："刷新 (Ctrl+R)"
+```
 
+#### 支持的修饰键组合
+
+```csharp
+// 单一修饰键
+new MenuShortcut(ModifierKeys.Control, Key.A)      // Ctrl+A
+new MenuShortcut(ModifierKeys.Alt, Key.F4)         // Alt+F4  
+new MenuShortcut(ModifierKeys.Shift, Key.Delete)   // Shift+Delete
+
+// 组合修饰键
+new MenuShortcut(ModifierKeys.Control | ModifierKeys.Shift, Key.N)  // Ctrl+Shift+N
+new MenuShortcut(ModifierKeys.Alt | ModifierKeys.Control, Key.T)    // Alt+Ctrl+T
+
+// 无修饰键（功能键等）
+new MenuShortcut(ModifierKeys.None, Key.F5)        // F5
+new MenuShortcut(ModifierKeys.None, Key.Escape)    // Esc
+```
+
+#### 节点级别菜单
+
+```csharp
+var fileNode = TreeNodeEx.CreateNode("文件");
+fileNode.MenuItemModels.Add(
+    new TreeNodeMenu("打开", node => OpenFile(node))
+);
+```
+
+### 6. **高级查询功能**
+
+```csharp
+// 复制节点
+var copiedNode = originalNode.Copy();
+
+// 复选框状态查询
 var checkedNodes = parent.GetCheckedChildren();
-var allChecked = parent.GetAllCheckedDescendants();
-var checkboxCount = parent.GetCheckBoxChildrenCount();
-var checkedCount = parent.GetCheckedChildrenCount();
-var hasChecked = parent.HasCheckedChildren();
+var allCheckedDescendants = parent.GetAllCheckedDescendants();
+var hasCheckedChildren = parent.HasCheckedChildren();
 ```
 
-## 📝 注意事项
+## ⌨️ 快捷键系统详解
 
-* 树级别菜单使用 `Controller.Options.MenuItemModels`
-* 节点级别菜单使用 `node.MenuItemModels`
-* 节点删除使用 `node.Delete()`
-* 快捷键通过 `Shortcut` 自动注册
-* 图标配置通过 `TreeNodeExIconOptions` 设置
-* 文本样式通过 `TreeNodeExTextOptions` 设置
-
-## 🔧 API 使用指南
-
-### 控制器相关
+### 快捷键配置方式
 
 ```csharp
-var controller = provider.Controller;
-var selected = controller.SelectedNodes;
-var sourceNodes = controller.SourceTreeNodes;
-var treeMenus = controller.Options.MenuItemModels;
+// 1. 创建菜单时直接设置快捷键
+var menu = new TreeViewMenu("新建", CreateNewAction)
+{
+    Shortcut = new MenuShortcut(ModifierKeys.Control, Key.N)
+};
+
+// 2. 后期设置快捷键
+menu.Shortcut = new MenuShortcut(ModifierKeys.Control, Key.O);
 ```
 
-### 节点相关
+### 支持的快捷键类型
+
+| 类型 | 示例 | 使用场景 |
+|------|------|----------|
+| **基础组合** | `Ctrl+S`, `Ctrl+C` | 常用操作 |
+| **复杂组合** | `Ctrl+Shift+N`, `Alt+Ctrl+T` | 高级功能 |
+| **功能键** | `F5`, `F12` | 刷新、调试等 |
+| **导航键** | `Delete`, `Enter` | 删除、确认 |
+
+### 快捷键显示规则
 
 ```csharp
-var node = TreeNodeEx.CreateNode("节点名称");
-node.AddChild("子节点");
-node.AddChild(childNode);
-node.AddRange(children);
+// 自动在菜单文本后显示快捷键提示
+// "刷新" → "刷新 (Ctrl+R)"
+// "全选" → "全选 (Ctrl+A)"
+// "新建项目" → "新建项目 (Ctrl+Shift+N)"
 
-var copied = node.Copy();
-var copiedTo = node.CopyTo(parent);
-
-var checkedChildren = node.GetCheckedChildren();
-var allChecked = node.GetAllCheckedDescendants();
-var checkboxCount = node.GetCheckBoxChildrenCount();
-var checkedCount = node.GetCheckedChildrenCount();
-var hasChecked = node.HasCheckedChildren();
+// 可通过 ShortcutDisplay 属性获取显示文本
+string displayText = menu.ShortcutDisplay;
 ```
 
-### 菜单相关
+### 快捷键冲突处理
 
 ```csharp
-var menu = new TreeViewMenu("菜单项", action);
-var nodeMenu = new TreeNodeMenu("菜单项", action);
-menu.Shortcut = new MenuShortcut(ModifierKeys.Control, Key.S);
-menu.Icon = yourIcon;
+// 系统会自动处理快捷键注册
+// 如果同一快捷键被多次注册，后注册的会覆盖先注册的
 
-controller.Options.MenuItemModels.Add(menu);
-node.MenuItemModels.Add(nodeMenu);
+// 建议的快捷键分配策略：
+// - 常用操作使用简单组合（Ctrl+S, Ctrl+C）
+// - 特定功能使用复杂组合（Ctrl+Shift+*）
+// - 系统级操作使用功能键（F1-F12）
 ```
 
-## 🎯 版本建议
+## 📋 API 参考
+
+### 节点操作
+
+| 方法 | 描述 |
+|------|------|
+| `TreeNodeEx.CreateNode(text)` | 创建新节点 |
+| `node.AddChild(text)` | 添加文本子节点 |
+| `node.AddChild(childNode)` | 添加子节点对象 |
+| `node.AddRange(nodes)` | 批量添加子节点 |
+| `node.Copy()` | 复制节点及其子树 |
+| `node.CopyTo(parent)` | 复制到指定父节点 |
+| `node.Delete()` | 删除节点 |
+
+### 复选框查询
+
+| 方法 | 描述 |
+|------|------|
+| `GetCheckedChildren()` | 获取直接子节点中选中的节点 |
+| `GetAllCheckedDescendants()` | 获取所有子孙节点中选中的节点 |
+| `GetCheckBoxChildrenCount()` | 获取显示复选框的子节点数量 |
+| `GetCheckedChildrenCount()` | 获取选中的子节点数量 |
+| `HasCheckedChildren()` | 检查是否有选中的子节点 |
+
+### 菜单和快捷键
+
+| 属性/方法 | 描述 |
+|-----------|------|
+| `Controller.Options.MenuItemModels` | 树级别菜单集合 |
+| `node.MenuItemModels` | 节点级别菜单集合 |
+| `new TreeViewMenu(header, action)` | 创建树级别菜单 |
+| `new TreeNodeMenu(header, action)` | 创建节点级别菜单 |
+| `menu.Shortcut` | 设置菜单快捷键 |
+| `menu.ShortcutDisplay` | 获取快捷键显示文本 |
+| `new MenuShortcut(modifiers, key)` | 创建快捷键配置 |
+
+## 🎯 适用场景
 
 ### 当前版本适用场景
 

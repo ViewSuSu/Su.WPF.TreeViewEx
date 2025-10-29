@@ -1,23 +1,22 @@
-
 # WPF TreeView Control Wrapper Library Usage Guide
 
 ## Overview
 
-**Developers have long struggled with TreeView!** The web is full of various solutions, from complex custom templates to cumbersome data binding. Implementing a fully functional TreeView in WPF often feels like an uphill battle. However, there has not been a unified, complete, and easy-to-use solution—until now.
+**Developers have long suffered with TreeView!** The web is full of various solutions, ranging from complex custom templates to cumbersome data bindings. Implementing a fully-featured TreeView in WPF has been a challenge. Until now, there has been no unified, complete, and easy-to-use wrapper solution.
 
 **Here is a feasible solution!**
 
-This project provides a complete, object-oriented way to manage tree nodes, freeing developers from tedious template definitions, data binding, and event handling, allowing them to focus on business logic implementation.
+This project provides a complete, object-oriented way to manipulate tree nodes, freeing developers from tedious template definitions, data bindings, and event handling, so they can focus on implementing business logic.
 
 ## Framework Support
 
-This wrapper library supports the following frameworks:
+This library supports the following framework versions:
 
 * **.NET Framework 4.5 and above**
 * **.NET Core 3.1 and above**
 * **.NET 5.0 (Windows desktop only) and above**
 
-> This means you can use it directly in WPF or WinForms desktop applications without extra adaptation.
+> This means you can directly use it in WPF or WinForms desktop applications without extra adaptation.
 
 ## 🎬 Demo Animation
 
@@ -27,83 +26,83 @@ This wrapper library supports the following frameworks:
 
 ## 🎯 Core Design Principles
 
-### 🏗️ Robust Architecture Based on SOLID Principles
+### 🏗️ SOLID-based Robust Architecture
 
-The project follows **object-oriented design** and strictly adheres to **SOLID principles**, especially the **Open/Closed principle**:
+The project adopts **object-oriented design** and strictly follows **SOLID principles**, especially the **Open/Closed Principle**:
 
-* **✅ Open for extension**: Easily inherit from `TreeNodeEx`, `MenuBase`, etc., to add custom functionality
-* **✅ Closed for modification**: Core APIs are stable and won’t break existing code during updates
-* **✅ Single responsibility**: Each class has a clear responsibility boundary, avoiding "God objects"
-* **✅ Interface segregation**: Provides fine-grained configuration options for selective use
+* **✅ Open for extension**: Easily inherit from `TreeNodeEx`, `MenuBase`, etc., to add custom features
+* **✅ Closed for modification**: Core APIs are stable, updates won’t break existing code
+* **✅ Single Responsibility**: Each class has a clear responsibility, avoiding "God objects"
+* **✅ Interface Segregation**: Provides fine-grained configuration options for selective use
 
-### 🌟 Pure and Zero Dependency Implementation
+### 🌟 Pure, Zero-Dependency Implementation
 
-**Key feature: No third-party dependencies!**
+**Key feature: no third-party dependencies!**
 
 ```csharp
 // Pure native WPF implementation
 // ✅ No MVVM frameworks (Prism, MVVMLight, etc.)
-// ✅ No UI component libraries (MaterialDesign, MahApps, etc.)
-// ✅ No IoC containers (Autofac, Unity, etc.)
+// ✅ No UI component libraries (MaterialDesign, MahApps, etc.)  
+// ✅ No IOC containers (Autofac, Unity, etc.)
 // ✅ No other NuGet packages
 
-// Ready to use out-of-the-box
-````
+// Ready to use, no complex environment setup required
+```
 
 ### 🔒 Safe API Design
 
 ```csharp
-// The compiler prevents incorrect usage
-// ❌ The following will cause compile errors:
-// node.MenuItems.Add(...);        // MenuItems is read-only
-// provider.Controller = null;     // Controller is read-only
-// node.Children = new List<>();   // Children collection is protected
+// Compiler prevents incorrect usage
+// ❌ These will cause compile errors:
+node.MenuItems.Add(...);        // MenuItems is read-only
+provider.Controller = null;     // Controller is read-only
+node.Children = new List<>();   // Children collection is protected
 
-// ✅ Only designed public methods can be used
+// ✅ Only allowed operations:
 node.AddChild("Safe operation");
-node.MenuItemModels.Add(menu);     // Correct collection operation
+node.MenuItemModels.Add(menu);  // Correct collection operation
 ```
 
 ## 🚧 Current Version Status
 
-**Optimization is ongoing.** The current version already implements core functionality stably, but there is still room for improvement.
+**Optimization work is ongoing!** The current version reasonably implements core features and is stable, but there is still room for improvement:
 
-### ✅ Stable Features
+### ✅ Stable Features Implemented
 
 * **Complete tree structure management** - node creation, deletion, traversal, etc.
-* **Checkbox system** - tri-state, automatic cascading, state query
-* **Context menu system** - tree-level and node-level menus with shortcut support
-* **Style configuration system** - icons, colors, fonts, and other visual customization
-* **Selection management** - multi-selection support, selection state tracking
-* **Copy function** - full node structure duplication
+* **Checkbox system** - tri-state management, auto cascade, status query
+* **Context menu system** - tree-level and node-level menus, with shortcut support
+* **Style configuration system** - icons, colors, fonts, visual customization
+* **Selection management** - multi-selection support, state tracking
+* **Copy functionality** - full node structure duplication
 * **Data binding** - associate custom data objects
 
-### ⚠️ Known Improvements
+### ⚠️ Known Areas for Optimization
 
 #### 1. **Performance Optimization**
 
-* **Virtualization**: Current version may have performance issues when handling large datasets (e.g., 1000+ nodes). Plan to implement virtualization to render only visible nodes.
-* **Memory management**: Further optimization of node lifecycle to reduce memory usage.
+* **Virtualization**: Rendering large-scale node data (1000+ nodes) may be slow. Virtualization to render only visible nodes is planned.
+* **Memory Management**: Further optimization of node lifecycle management to reduce memory usage.
 
-#### 2. **Asynchronous Operations**
+#### 2. **Asynchronous Operation Support**
 
-* **Data loading**: Currently synchronous; large or remote datasets may block UI thread.
-* **Batch operations**: Need async batch operations for better user experience.
+* **Data Loading**: All operations are synchronous, which may block the UI when handling large or remote data.
+* **Batch Operations**: Implement asynchronous batch node operations for better UX.
 
-#### 3. **Advanced Features Planning**
+#### 3. **Advanced Feature Planning**
 
-* **Lazy loading**: Load child nodes only when needed.
-* **Animations**: Smooth expand/collapse animations.
-* **Drag-and-drop**: Full drag-and-drop support.
-* **Filter/Search**: Real-time filtering and search.
+* **Lazy Loading**: Load child nodes only when needed.
+* **Animation Effects**: Smooth expand/collapse animations.
+* **Drag & Drop**: Full drag-and-drop support.
+* **Filtering & Search**: Real-time filtering and search.
 
 ## Quick Start
 
-### 1. Basic Usage - Goodbye Complex Configuration
+### 1. Basic Usage - No More Complex Configuration!
 
 ```csharp
 // Traditional way: define templates, bindings, styles...
-// This project: done in 3 lines!
+// This project: 3 lines of code!
 var nodes = new List<TreeNodeEx>
 {
     TreeNodeEx.CreateNode("Root Node 1"),
@@ -126,12 +125,12 @@ node.TreeNodeExIconOptions.Icon = BitmapFrame.Create(new Uri("pack://application
 node.TreeNodeExIconOptions.Icon = (ImageSource)FindResource("MyIcon");
 
 // Customize icon size
-node.TreeNodeExIconOptions.Width = 24;
+node.TreeNodeExIconOptions.Width = 24;  // Default 16, adjustable
 
-// Display logic: shown if Icon is not null and Width > 0
+// Auto display logic: show icon if Icon != null and Width > 0
 if (node.TreeNodeExIconOptions.IsShowImageSource)
 {
-    // Icon will appear before node text
+    // Icon appears before node text
 }
 ```
 
@@ -148,7 +147,7 @@ node.TreeNodeExTextOptions.FontWeight = FontWeights.Bold;
 node.TreeNodeExTextOptions.FontWeight = FontWeights.SemiBold;
 node.TreeNodeExTextOptions.FontWeight = FontWeights.Normal;
 
-// Example
+// Example usage
 var titleNode = TreeNodeEx.CreateNode("Chapter Title");
 titleNode.TreeNodeExTextOptions.FontSize = 16;
 titleNode.TreeNodeExTextOptions.FontWeight = FontWeights.Bold;
@@ -168,14 +167,14 @@ node.HighlightColor = Color.FromArgb(255, 0, 120, 215);
 Brush highlightBrush = node.HighlightColorBrush;
 ```
 
-### 4. Full Tree Structure Construction
+### 4. Complete Tree Structure Construction
 
 ```csharp
 var project = TreeNodeEx.CreateNode("My Project");
 project.TreeNodeExIconOptions.Icon = LoadIcon("project.png");
 project.TreeNodeExIconOptions.Width = 20;
 
-var srcFolder = project.AddChild("Source");
+var srcFolder = project.AddChild("Source Code");
 srcFolder.TreeNodeExIconOptions.Icon = folderIcon;
 srcFolder.AddChild("MainWindow.xaml.cs");
 srcFolder.AddChild("MainViewModel.cs");
@@ -195,11 +194,11 @@ srcFolder.MenuItemModels.Add(new TreeNodeMenu("New File", node => {
 var parent = TreeNodeEx.CreateNode("Parent Node");
 parent.IsShowCheckBox = true;
 
-var child1 = parent.AddChild("Child 1");
+var child1 = parent.AddChild("Child Node 1");
 child1.IsShowCheckBox = true;
 child1.IsChecked = true;
 
-var child2 = parent.AddChild("Child 2"); 
+var child2 = parent.AddChild("Child Node 2"); 
 child2.IsShowCheckBox = true;
 child2.IsChecked = false;
 ```
@@ -230,7 +229,7 @@ var complexShortcut = new TreeViewMenu("Advanced Action", AdvancedAction)
 };
 ```
 
-### 7. New Features
+### 7. Additional Features
 
 ```csharp
 var original = GetComplexNodeStructure();
@@ -241,19 +240,72 @@ var checkedNodes = parent.GetCheckedChildren();
 var allChecked = parent.GetAllCheckedDescendants();
 var checkboxCount = parent.GetCheckBoxChildrenCount();
 var checkedCount = parent.GetCheckedChildrenCount();
+提交信息 
+update README.en.md.
+扩展信息
+此处可填写为什么修改，做了什么样的修改，以及开发的思路等更加详细的提交信息。（相当于 Git Commit message 的 Body）
+Signed-off-by: Su <11813231+SususuChang@user.noreply.gitee.com> 更换邮箱
+目标分支
+master
+ 取消
+Gitee - 基于 Git 的代码托管和研发协作平台
+北京奥思研工智能科技有限公司版权所有
+Git 大全
+Git 命令学习
+CopyCat 代码克隆检测
+APP与插件下载
+ 
+Gitee 封面人物
+GVP 项目
+Gitee 博客
+Gitee 公益计划
+Gitee 持续集成
+ 
+OpenAPI
+MCP Server
+帮助文档
+在线自助服务
+更新日志
+ 
+关于我们
+加入我们
+使用条款
+意见建议
+合作伙伴
+ 
+技术交流QQ群
+技术交流QQ群
+
+ 
+微信服务号
+微信服务号
+
+ client@oschina.cn
+ 企业版在线使用：400-606-0201
+专业版私有部署：
+13670252304
+13352947997
+开放原子开源基金会
+开放原子开源基金会
+合作代码托管平台
+违法和不良信息举报中心
+违法和不良信息举报中心
+京ICP备2025119063号
+ 简 体 / 繁 體 / English
+
 var hasChecked = parent.HasCheckedChildren();
 ```
 
 ## 📝 Notes
 
-* Use `Controller.Options.MenuItemModels` for tree-level menus
-* Use `node.MenuItemModels` for node-level menus
-* Delete nodes using `node.Delete()`
-* Shortcuts are automatically registered via the `Shortcut` property
-* Icon configuration via `TreeNodeExIconOptions`
-* Text styling via `TreeNodeExTextOptions`
+* Tree-level menus: use `Controller.Options.MenuItemModels`
+* Node-level menus: use `node.MenuItemModels`
+* Delete node: `node.Delete()`
+* Shortcuts automatically register via `Shortcut`
+* Icon configuration: `TreeNodeExIconOptions`
+* Text style: `TreeNodeExTextOptions`
 
-## 🔧 API Guide
+## 🔧 API Usage Guide
 
 ### Controller
 
@@ -296,45 +348,43 @@ node.MenuItemModels.Add(nodeMenu);
 
 ## 🎯 Version Recommendations
 
-### Current Version Suitable For
+### Current Version Suitable Scenarios
 
-* ✅ Small to medium datasets (< 500 nodes)
+* ✅ Small to medium datasets (nodes < 500)
 * ✅ Local data operations
-* ✅ Synchronous operations
+* ✅ Synchronous processing
 * ✅ Basic tree display
-* ✅ Complete context menu support
+* ✅ Full context menu support
 * ✅ Checkbox functionality
-* ✅ Shortcut support
+* ✅ Shortcut key support
 * ✅ Icon and style customization
 
-### Future Optimization Scenarios
+### Upcoming Version Suitable Scenarios
 
-* 🔄 Large datasets (> 1000 nodes)
+* 🔄 Large datasets (nodes > 1000)
 * 🔄 Remote data loading
 * 🔄 Asynchronous operations
 * 🔄 High-performance requirements
-* 🔄 Complex animation effects
+* 🔄 Complex animation needs
 
 ## Conclusion
 
-**Although optimization continues, the current version is already powerful!**
+**Although optimizations are ongoing, the current version is already powerful!**
 
-This project provides a **stable, fully functional, and easy-to-use** TreeView solution, covering 90% of daily development needs. For ultra-large datasets, optimization is ongoing.
+This project provides a **stable, fully-featured, easy-to-use** TreeView solution, solving 90% of daily development needs. For extreme large-scale data scenarios, an optimized version is under active development.
 
 ## 💡 Design Philosophy
 
-**"Simple should not be complicated, complicated should not be simple."**
+**"Simple shouldn’t be complicated, complex shouldn’t be simple."**
 
-* Common features should be **ready to
-
-
-use out-of-the-box**
-
+* Common features should be **ready-to-use**
 * Advanced features should be **extensible**
-* Misuse should **trigger compile-time errors**
+* Incorrect usage should **fail at compile time**
 * Architecture should be **future-proof**
 
-```
+## 🔗 Repository Links
+
+* Gitee: [https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
+* GitHub: [https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
 
 ---
-

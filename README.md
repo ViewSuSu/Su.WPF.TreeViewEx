@@ -10,7 +10,10 @@
 该项目提供了一套完整的、面向对象的树节点操作方式，让开发者从繁琐的模板定义、数据绑定、事件处理中解放出来，专注于业务逻辑的实现。
 
 ## 🎬 演示动画
-<div align="center"> <img src="./HD.gif" alt="TreeViewEx 功能演示" width="50%"> </div>
+<div align="left">
+<img src="./HD.gif" alt="TreeViewEx 功能演示" width="30%">
+</div>
+
 
 
 ## 🎯 核心设计理念

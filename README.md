@@ -13,8 +13,8 @@
 本封装库支持以下框架版本：
 
 * **.NET Framework 4.5 及以上**
-* **.NET Core 3.1**
-* **.NET 5.0（仅限 Windows 桌面应用）**
+* **.NET Core 3.1 及以上**
+* **.NET 5.0（仅限 Windows 桌面应用）及以上**
 
 > 这意味着你可以在 WPF 或 WinForms 桌面应用中直接使用，无需额外适配。
 

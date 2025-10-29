@@ -11,6 +11,7 @@
     Height="600"
     d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
     Icon="{Binding Icon, Mode=OneWay}"
+    Topmost="True"
     mc:Ignorable="d">
     <Grid>
         <ContentControl Content="{Binding Provider.TreeView, Mode=OneWay}" />

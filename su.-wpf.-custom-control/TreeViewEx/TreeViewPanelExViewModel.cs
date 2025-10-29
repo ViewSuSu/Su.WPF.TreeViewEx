@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Su.WPF.CustomControl.TreeViewEx
 {
     internal class TreeViewPanelExViewModel : INotifyPropertyChanged
     {
-        public TreeViewController TreeViewExProvider { get; set; }
+        public TreeViewExController TreeViewExProvider { get; set; }
 
-        public TreeViewPanelExViewModel(TreeViewController treeViewExProvider)
+        public TreeViewPanelExViewModel(TreeViewExController treeViewExProvider)
         {
             this.TreeViewExProvider = treeViewExProvider;
         }

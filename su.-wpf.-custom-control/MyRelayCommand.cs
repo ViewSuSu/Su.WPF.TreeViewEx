@@ -1,20 +1,20 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace Su.WPF.CustomControl
 {
-    public class RelayCommand : ICommand
+    public class MyRelayCommand : ICommand
     {
         private Action action;
         private Action<object> action2;
+
         public event EventHandler CanExecuteChanged;
 
-        public RelayCommand(Action action)
+        public MyRelayCommand(Action action)
         {
             this.action = action;
         }
 
-        public RelayCommand(Action<object> action)
+        public MyRelayCommand(Action<object> action)
         {
             this.action2 = action;
         }

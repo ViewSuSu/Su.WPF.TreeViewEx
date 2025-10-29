@@ -1,14 +1,15 @@
 ﻿<UserControl
     x:Class="Su.WPF.CustomControl.TreeViewEx.TreeViewPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:Su.WPF.CustomControl.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Su.WPF.CustomControl.TreeViewEx"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="clr-namespace:Su.WPF.CustomControl.Converters"
+    xmlns:local="clr-namespace:Su.WPF.CustomControl.TreeViewEx"
     d:DataContext="{d:DesignInstance Type=local:TreeViewPanelExViewModel}"
     d:DesignHeight="600"
     d:DesignWidth="300"
+    x:ClassModifier="internal"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -160,15 +161,15 @@
                     IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Orientation="Horizontal"
                     PreviewMouseRightButtonDown="StackPanel_PreviewMouseRightButtonDown"
-                    ToolTip="{Binding Tooltip, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    ToolTip="{Binding Tooltip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <StackPanel.ContextMenu>
-                        <ContextMenu ItemsSource="{Binding ShowMenuItemModels, Mode=OneWay}" Visibility="{Binding IsRightButtonWillShowMenu, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <ContextMenu ItemsSource="{Binding MenuItems, Mode=OneWay}" Visibility="{Binding IsRightButtonWillShowMenu, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel.ContextMenu>
                     <Image
                         Width="{Binding TreeNodeExIconOptions.Width}"
                         Height="Auto"
                         VerticalAlignment="Center"
-                        Source="{Binding TreeNodeExIconOptions.Icon, Mode=OneWay}"
+                        Source="{Binding TreeNodeExIconOptions.Icon, Mode=TwoWay}"
                         Stretch="Uniform"
                         Visibility="{Binding TreeNodeExIconOptions.IsShowImageSource, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <CheckBox
@@ -182,9 +183,9 @@
                         Margin="2,0,0,0"
                         VerticalAlignment="Center"
                         d:Text="123"
-                        FontSize="{Binding TreeNodeExTextOptions.FontSize, Mode=OneWay}"
-                        FontWeight="{Binding TreeNodeExTextOptions.FontWeight, Mode=OneWay}"
-                        Text="{Binding TreeNodeExTextOptions.Text, Mode=OneWay}" />
+                        FontSize="{Binding TreeNodeExTextOptions.FontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        FontWeight="{Binding TreeNodeExTextOptions.FontWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </HierarchicalDataTemplate>
         </ResourceDictionary>
@@ -192,7 +193,7 @@
 
     <local:MultiSelectTreeView ItemsSource="{Binding TreeViewExProvider.SourceTreeNodes}" SelectedItems="{Binding TreeViewExProvider.SelectedNodes}">
         <local:MultiSelectTreeView.ContextMenu>
-            <ContextMenu ItemsSource="{Binding TreeViewExProvider.Options.ShowMenuItemModels, Mode=OneWay}" Visibility="{Binding TreeViewExProvider.Options.IsRightButtonWillShowMenu, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <ContextMenu ItemsSource="{Binding TreeViewExProvider.Options.MenuItems, Mode=OneWay}" Visibility="{Binding TreeViewExProvider.Options.IsRightButtonWillShowMenu, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         </local:MultiSelectTreeView.ContextMenu>
         <TreeView.ItemContainerStyle>
             <Style BasedOn="{StaticResource MyTreeViewItemStyle}" TargetType="{x:Type TreeViewItem}">
@@ -207,5 +208,3 @@
         </TreeView.ItemContainerStyle>
     </local:MultiSelectTreeView>
 </UserControl>
-
-

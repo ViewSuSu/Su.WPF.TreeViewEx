@@ -5,14 +5,10 @@
      <UseWPF>true</UseWPF>
      <ImplicitUsings>enable</ImplicitUsings>
 	  <UseWPF>true</UseWPF>
-	  <UseWindowsForms>true</UseWindowsForms>
 	  <LangVersion>latest</LangVersion>
 	  <Authors>Su</Authors>
 	  <Version>1.0.0</Version>
 	  <Product>$(MSBuildProjectName)</Product>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <!--<ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-  </ItemGroup>-->
 </Project>

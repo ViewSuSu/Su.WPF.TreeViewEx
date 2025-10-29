@@ -1,86 +1,18 @@
-﻿using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Input;
 
 namespace Su.WPF.CustomControl.Menu
 {
-    public abstract class MenuBase
-    {
-        public System.Windows.Controls.MenuItem MenuItem { get; } =
-            new System.Windows.Controls.MenuItem();
-        private string _header;
-        private ImageSource _icon;
-        internal Action MouseLeftButtonClick { get; set; }
-
-        /// <summary>
-        /// 菜单标题
-        /// </summary>
-        public string Header
-        {
-            get => _header;
-            set
-            {
-                _header = value;
-                MenuItem.Header = value;
-            }
-        }
-
-        /// <summary>
-        /// 菜单图标
-        /// </summary>
-        public ImageSource Icon
-        {
-            get => _icon;
-            set
-            {
-                _icon = value;
-                MenuItem.Icon =
-                    value != null
-                        ? new System.Windows.Controls.Image
-                        {
-                            Source = value,
-                            Stretch = Stretch.Uniform,
-                        }
-                        : null;
-            }
-        }
-
-        /// <summary>
-        /// 构造
-        /// </summary>
-        public MenuBase(string header, Action mouseLeftButtonClick)
-        {
-            this._header = header;
-            this.MouseLeftButtonClick = mouseLeftButtonClick;
-            MenuItem.Header = header;
-            MenuItem.Click += (o, e) => this.MouseLeftButtonClick?.Invoke();
-        }
-    }
-
-    public class TreeNodeMenu : MenuBase
-    {
-        public TreeNodeMenu(string header, Action mouseLeftButtonClick)
-            : base(header, mouseLeftButtonClick) { }
-    }
-
-    public class MenuShortcut
-    {
-        public ModifierKeys ModifierKeys { get; }
-        public Key Key { get; }
-
-        public MenuShortcut(ModifierKeys modifierKeys, Key key)
-        {
-            this.ModifierKeys = modifierKeys;
-            this.Key = key;
-        }
-
-        private MenuShortcut() { }
-    }
-
+    /// <summary>
+    /// 树视图菜单类（支持快捷键）
+    /// </summary>
     public class TreeViewMenu : MenuBase
     {
         internal const string ShortcutPropertyName = nameof(Shortcut);
+        internal readonly Action mouseLeftButtonClick;
 
+        /// <summary>
+        /// 菜单快捷键
+        /// </summary>
         public MenuShortcut Shortcut { get; set; }
 
         /// <summary>
@@ -100,7 +32,20 @@ namespace Su.WPF.CustomControl.Menu
             }
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="header">菜单标题</param>
+        /// <param name="mouseLeftButtonClick">鼠标左键点击事件处理</param>
         public TreeViewMenu(string header, Action mouseLeftButtonClick)
-            : base(header, mouseLeftButtonClick) { }
+            : base(header)
+        {
+            this.mouseLeftButtonClick = mouseLeftButtonClick;
+        }
+
+        protected override void OnMouseLeftButtonClick()
+        {
+            mouseLeftButtonClick?.Invoke();
+        }
     }
 }

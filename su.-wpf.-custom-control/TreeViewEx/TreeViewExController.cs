@@ -1,23 +1,39 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace Su.WPF.CustomControl.TreeViewEx
 {
-    public class TreeViewController : ObservableObject
+    /// <summary>
+    /// 树视图控制器，负责管理树节点的操作和管理数据源
+    /// </summary>
+    public sealed class TreeViewExController : ObservableObjectBase
     {
+        /// <summary>
+        /// 当前选中的节点列表
+        /// </summary>
         public List<TreeNodeEx> SelectedNodes { get; set; } = [];
 
         /// <summary>
-        /// 源数据，外部可修改
+        /// 源数据树节点集合，外部可修改
         /// </summary>
-        public ObservableCollection<TreeNodeEx> SourceTreeNodes { get; set; }
+        public ObservableCollection<TreeNodeEx> SourceTreeNodes { get; private set; }
 
-        public TreeViewPropertyOptions Options { get; internal set; }
+        /// <summary>
+        /// 树视图属性选项配置
+        /// </summary>
+        public TreeViewExPropertyOptions Options { get; internal set; }
 
-        internal TreeViewController(IList<TreeNodeEx> sourceTreeNodes, TreeViewPanel treeViewPanel)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="sourceTreeNodes">源树节点列表</param>
+        /// <param name="treeViewPanel">树视图面板</param>
+        internal TreeViewExController(
+            IList<TreeNodeEx> sourceTreeNodes,
+            TreeViewPanel treeViewPanel
+        )
         {
             this.SourceTreeNodes = new ObservableCollection<TreeNodeEx>(sourceTreeNodes);
-            Options = new TreeViewPropertyOptions(treeViewPanel);
+            Options = new TreeViewExPropertyOptions(treeViewPanel);
 
             // 为所有节点设置控制器引用
             SetControllerRecursive(SourceTreeNodes, this);
@@ -35,10 +51,10 @@ namespace Su.WPF.CustomControl.TreeViewEx
         }
 
         /// <summary>
-        /// 删除节点（支持递归）
+        /// 删除节点（支持递归删除节点及其子节点）
         /// </summary>
         /// <param name="nodes">要删除的节点列表</param>
-        public void DeleteNodes(IEnumerable<TreeNodeEx> nodes)
+        internal void DeleteNodes(IEnumerable<TreeNodeEx> nodes)
         {
             if (nodes == null)
                 return;
@@ -52,6 +68,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
         /// <summary>
         /// 删除单个节点
         /// </summary>
+        /// <param name="node">要删除的节点</param>
         private void RemoveNode(TreeNodeEx node)
         {
             if (node == null)
@@ -80,6 +97,7 @@ namespace Su.WPF.CustomControl.TreeViewEx
         /// <summary>
         /// 递归从SelectedNodes中移除节点及其所有子节点
         /// </summary>
+        /// <param name="node">要移除的节点</param>
         private void RemoveFromSelectedRecursive(TreeNodeEx node)
         {
             if (node == null)
@@ -99,11 +117,13 @@ namespace Su.WPF.CustomControl.TreeViewEx
         }
 
         /// <summary>
-        /// 递归设置控制器引用
+        /// 递归设置控制器引用到所有节点
         /// </summary>
+        /// <param name="nodes">节点集合</param>
+        /// <param name="controller">控制器实例</param>
         private void SetControllerRecursive(
             IEnumerable<TreeNodeEx> nodes,
-            TreeViewController controller
+            TreeViewExController controller
         )
         {
             if (nodes == null)
@@ -128,12 +148,18 @@ namespace Su.WPF.CustomControl.TreeViewEx
             }
         }
 
-        internal static TreeViewController GetTreeViewExProvider(
+        /// <summary>
+        /// 获取树视图控制器实例
+        /// </summary>
+        /// <param name="treeNodeExes">树节点列表</param>
+        /// <param name="treeViewPanel">树视图面板</param>
+        /// <returns>树视图控制器实例</returns>
+        internal static TreeViewExController GetTreeViewExProvider(
             IList<TreeNodeEx> treeNodeExes,
             TreeViewPanel treeViewPanel
         )
         {
-            var provider = new TreeViewController(treeNodeExes, treeViewPanel);
+            var provider = new TreeViewExController(treeNodeExes, treeViewPanel);
             return provider;
         }
     }

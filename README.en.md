@@ -9,7 +9,10 @@
 This project provides a complete, object-oriented approach to tree node operations, freeing developers from tedious template definitions, data bindings, and event handling, allowing them to focus on business logic implementation.
 
 ## 🎬 Demo Animation
-<div align="center"> <img src="./HD.gif" alt="TreeViewEx Feature Demo" width="50%"> </div>
+<div align="left">
+<img src="./HD.gif" alt="TreeViewEx 功能演示" width="30%">
+</div>
+
 
 ## 🎯 Core Design Philosophy
 

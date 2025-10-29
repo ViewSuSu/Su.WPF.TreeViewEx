@@ -50,8 +50,8 @@ dotnet add package Su.WPF.TreeViewEx
 <img src="./HD.gif" alt="TreeViewEx 功能演示" width="30%">
 </div>
 
+### 🌟 零依赖的纯净实现
 **重要特性：无任何第三方依赖！**
-
 ```csharp
 // 纯原生 WPF 实现
 // ✅ 不依赖 MVVM 框架（Prism、MVVMLight等）
@@ -328,7 +328,6 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 * **✅ 单一职责**：每个类都有明确的职责边界，避免"上帝对象"
 * **✅ 接口隔离**：提供细粒度的配置选项，按需使用
 
-### 🌟 零依赖的纯净实现
 
 **虽然优化仍在继续，但当前版本已经足够强大！**
 

@@ -118,15 +118,9 @@ node.MenuItemModels.Add(menu);     // 正确的集合操作
 </Grid>
 ```
 
-### 2. 添加命名空间引用（如果需要）
-
-```xml
-<Window x:Class="YourApp.MainWindow"
-        xmlns:treeView="clr-namespace:Su.WPF.CustomControl.TreeViewEx;assembly=Su.WPF.TreeViewEx"
-        ...>
 ```
 
-### 3. ViewModel 基础结构
+### 2. ViewModel 基础结构
 
 ```csharp
 using Su.WPF.CustomControl.TreeViewEx;

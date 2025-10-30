@@ -48,7 +48,6 @@ This library works with:
 * **.NET Core 3.1+**
 * **.NET 5.0 (Windows Desktop only) and later**
 
-> Works directly in WPF or WinForms desktop applications — no extra adaptation needed.
 
 ---
 

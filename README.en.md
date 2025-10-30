@@ -149,13 +149,7 @@ The core features are **stable and production-ready**, while further improvement
 </Grid>
 ```
 
-### 2️⃣ Namespace Reference
-
-```xml
-xmlns:treeView="clr-namespace:Su.WPF.CustomControl.TreeViewEx;assembly=Su.WPF.TreeViewEx"
-```
-
-### 3️⃣ Basic ViewModel Setup
+### 2️⃣ Basic ViewModel Setup
 
 ```csharp
 using Su.WPF.CustomControl.TreeViewEx;

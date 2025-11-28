@@ -7,7 +7,7 @@
 	  <UseWPF>true</UseWPF>
 	  <LangVersion>latest</LangVersion>
 	  <Authors>Su</Authors>
-	  <Version>1.0.1</Version>
+	  <Version>1.0.2</Version>
 	  <Product>$(MSBuildProjectName)</Product>
   </PropertyGroup>
 	<ItemGroup>

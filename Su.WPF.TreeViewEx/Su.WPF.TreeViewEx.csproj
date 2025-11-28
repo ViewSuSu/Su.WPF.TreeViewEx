@@ -19,7 +19,7 @@
 	<PropertyGroup Condition="!$([System.String]::Copy('$(Configuration)').Contains('D'))">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageId>$(MSBuildProjectName)</PackageId>
-		<PackageDescription>A complete, object-oriented approach to TreeView node operations that frees developers from tedious template definitions, data binding, and event handling, allowing them to focus on implementing business logic.</PackageDescription>
+		<PackageDescription>A complete, object-oriented WPF TreeView solution that encapsulates templates, data binding, and events, letting you focus on business logic. The same design applies to Avalonia TreeView for a consistent cross-framework experience</PackageDescription>
 		<PackageTags>WPF;TreeView;C#;Csharp</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageOutputPath>$(SolutionDir)\Nuget\$(MSBuildProjectName)\</PackageOutputPath>

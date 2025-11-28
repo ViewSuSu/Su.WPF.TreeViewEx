@@ -8,6 +8,12 @@
 
 该项目提供了一套完整的、面向对象的树节点操作方式，让开发者从繁琐的模板定义、数据绑定、事件处理中解放出来，专注于业务逻辑的实现。
 
+## 🔗 仓库地址
+
+* **NuGet 包**: [Su.WPF.TreeViewEx](https://www.nuget.org/packages/Su.WPF.TreeViewEx/)
+* Gitee：[https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
+* GitHub：[https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
+
 ## 📦 NuGet 包安装
 
 ### 通过包管理器控制台安装
@@ -333,9 +339,3 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 * 高级功能应该**可扩展**
 * 错误使用应该**编译时报错**
 * 架构设计应该**面向未来**
-
-## 🔗 仓库地址
-
-* **NuGet 包**: [Su.WPF.TreeViewEx](https://www.nuget.org/packages/Su.WPF.TreeViewEx/)
-* Gitee：[https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
-* GitHub：[https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)

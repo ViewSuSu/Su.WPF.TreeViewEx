@@ -12,6 +12,14 @@ This project provides a complete set of object-oriented features for tree node o
 
 ---
 
+## 🔗 Repository & NuGet
+
+* NuGet: **Su.WPF.TreeViewEx**
+* Gitee: [https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
+* GitHub: [https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
+
+---
+
 ## 📦 NuGet Installation
 
 ### Package Manager Console
@@ -311,10 +319,3 @@ Perfect for 90% of hierarchical UI scenarios.
 
 ---
 
-## 🔗 Repository & NuGet
-
-* NuGet: **Su.WPF.TreeViewEx**
-* Gitee: [https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
-* GitHub: [https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
-
----

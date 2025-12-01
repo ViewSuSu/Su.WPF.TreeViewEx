@@ -1,4 +1,16 @@
+![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.5%2B-blue)
+![.NET Core](https://img.shields.io/badge/.NET%20Core-3.1%2B-green)
+![.NET 5+](https://img.shields.io/badge/.NET%205%2B-Windows%20Desktop-purple)
+![Platform](https://img.shields.io/badge/Platform-WPF-orange)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 # WPF 树控件TreeView封装库使用说明
+
+## 🔗 仓库地址
+
+* NuGet: [Su.WPF.TreeViewEx](https://www.nuget.org/packages/Su.WPF.TreeViewEx/)
+* Gitee：[https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
+* GitHub：[https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
 
 ## 概述
 
@@ -7,12 +19,6 @@
 **现在我给出一种可行的方案！**
 
 该项目提供了一套完整的、面向对象的树节点操作方式，让开发者从繁琐的模板定义、数据绑定、事件处理中解放出来，专注于业务逻辑的实现。
-
-## 🔗 仓库地址
-
-* **NuGet 包**: [Su.WPF.TreeViewEx](https://www.nuget.org/packages/Su.WPF.TreeViewEx/)
-* Gitee：[https://gitee.com/SususuChang/su.-wpf.-custom-control](https://gitee.com/SususuChang/su.-wpf.-custom-control)
-* GitHub：[https://github.com/ViewSuSu/Su.WPF.TreeViewEx](https://github.com/ViewSuSu/Su.WPF.TreeViewEx)
 
 ## 📦 NuGet 包安装
 
@@ -39,14 +45,6 @@ dotnet add package Su.WPF.TreeViewEx
 ```xml
 <PackageReference Include="Su.WPF.TreeViewEx" Version="1.0.0" />
 ```
-
-## 框架支持
-
-本封装库支持以下框架版本：
-
-* **.NET Framework 4.5 及以上**
-* **.NET Core 3.1 及以上**
-* **.NET 5.0（仅限 Windows 桌面应用）及以上**
 
 ## 🎬 演示动画
 
@@ -122,8 +120,6 @@ node.MenuItemModels.Add(menu);     // 正确的集合操作
 <Grid>
     <ContentControl Content="{Binding Provider.TreeView, Mode=OneWay}" />
 </Grid>
-```
-
 ```
 
 ### 2. ViewModel 基础结构
@@ -313,8 +309,6 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 * 🔄 高性能要求场景
 * 🔄 复杂动画效果需求
 
-## 总结
-
 ## 🎯 核心设计理念
 
 ### 🏗️ 基于 SOLID 原则的健壮架构
@@ -326,6 +320,7 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 * **✅ 单一职责**：每个类都有明确的职责边界，避免"上帝对象"
 * **✅ 接口隔离**：提供细粒度的配置选项，按需使用
 
+## 总结
 
 **虽然优化仍在继续，但当前版本已经足够强大！**
 
@@ -339,3 +334,10 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 * 高级功能应该**可扩展**
 * 错误使用应该**编译时报错**
 * 架构设计应该**面向未来**
+
+---
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+**如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！**

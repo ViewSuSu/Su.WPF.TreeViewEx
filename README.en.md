@@ -343,3 +343,8 @@ This project provides a **stable, feature-complete, easy-to-use** TreeView solut
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 **If this project is helpful to you, please give it a ⭐ Star!**
+
+
+## 星曲线图 / Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ViewSuSu/Su.WPF.TreeViewEx&type=Date)](https://star-history.com/#ViewSuSu/Su.WPF.TreeViewEx&Date)

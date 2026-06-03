@@ -343,3 +343,8 @@ var hasCheckedChildren = parent.HasCheckedChildren();
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
 **如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！**
+
+
+## 星曲线图 / Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ViewSuSu/Su.WPF.TreeViewEx&type=Date)](https://star-history.com/#ViewSuSu/Su.WPF.TreeViewEx&Date)
